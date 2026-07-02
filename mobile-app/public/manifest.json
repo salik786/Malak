@@ -1,0 +1,19 @@
+{
+  "name": "MALAK – Health Claim Checker",
+  "short_name": "MALAK",
+  "description": "AI-powered health misinformation checker",
+  "theme_color": "#0a0f1e",
+  "background_color": "#0a0f1e",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

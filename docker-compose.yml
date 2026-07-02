@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: malak
+      POSTGRES_PASSWORD: malakpassword
+      POSTGRES_DB: malakdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://malak:malakpassword@db:5432/malakdb
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  mobile-app:
+    build:
+      context: ./mobile-app
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./mobile-app:/app
+      - /app/node_modules
+
+  dashboard:
+    build:
+      context: ./dashboard
+    ports:
+      - "3001:3001"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./dashboard:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:

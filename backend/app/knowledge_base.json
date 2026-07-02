@@ -1,0 +1,157 @@
+[
+  {
+    "claim": "garlic injections cure COVID-19",
+    "risk_level": "high",
+    "explanation": "There is no scientific evidence that garlic injections cure or prevent COVID-19. Garlic is a healthy food, but it does not have antiviral properties strong enough to fight the virus, and injecting it can cause serious harm or infection.",
+    "sources": [
+      {"name": "World Health Organization (WHO)", "url": "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"},
+      {"name": "Centers for Disease Control (CDC)", "url": "https://www.cdc.gov/coronavirus/2019-ncov/your-health/index.html"},
+      {"name": "NHS UK", "url": "https://www.nhs.uk/conditions/coronavirus-covid-19/"}
+    ]
+  },
+  {
+    "claim": "drinking lemon water reduces weight",
+    "risk_level": "low",
+    "explanation": "Drinking lemon water on its own does not directly cause weight loss. It can support a healthy lifestyle by keeping you hydrated and replacing sugary drinks, which may help with weight management over time. However, there is no strong scientific evidence that lemon water itself burns fat or causes significant weight reduction.",
+    "sources": [
+      {"name": "Harvard T.H. Chan School of Public Health", "url": "https://www.hsph.harvard.edu/nutritionsource/healthy-drinks/water/"},
+      {"name": "Mayo Clinic", "url": "https://www.mayoclinic.org/healthy-lifestyle/weight-loss/expert-answers/water-and-weight-loss/faq-20058416"},
+      {"name": "National Institutes of Health (NIH)", "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4901052/"}
+    ]
+  },
+  {
+    "claim": "vaccines cause autism in children",
+    "risk_level": "high",
+    "explanation": "Extensive scientific studies over the last two decades have found no link between childhood vaccines and autism. The original paper that made this claim has been retracted, and the author lost his medical license.",
+    "sources": [
+      {"name": "Centers for Disease Control (CDC)", "url": "https://www.cdc.gov/vaccinesafety/concerns/autism.html"},
+      {"name": "World Health Organization (WHO)", "url": "https://www.who.int/news-room/questions-and-answers/item/vaccines-and-diseases"},
+      {"name": "American Academy of Pediatrics", "url": "https://www.healthychildren.org/English/safety-prevention/immunizations/Pages/Vaccine-Studies-Examine-the-Evidence.aspx"}
+    ]
+  },
+  {
+    "claim": "drinking 8 glasses of water daily is healthy",
+    "risk_level": "low",
+    "explanation": "Staying hydrated is important for overall health, and drinking about 8 glasses of water a day is a common guideline. However, individual needs vary based on age, sex, activity level, and climate.",
+    "sources": [
+      {"name": "Mayo Clinic", "url": "https://www.mayoclinic.org/healthy-lifestyle/nutrition-and-healthy-eating/in-depth/water/art-20044256"},
+      {"name": "Harvard Health Publishing", "url": "https://www.health.harvard.edu/staying-healthy/how-much-water-should-you-drink"}
+    ]
+  },
+  {
+    "claim": "eating ginger cures stomach cancer",
+    "risk_level": "high",
+    "explanation": "While ginger can help with mild nausea, it is not a cure for stomach cancer. Relying on ginger instead of proven medical treatments can delay necessary care and worsen health outcomes.",
+    "sources": [
+      {"name": "American Cancer Society", "url": "https://www.cancer.org/cancer/types/stomach-cancer/treating.html"},
+      {"name": "National Cancer Institute", "url": "https://www.cancer.gov/about-cancer/treatment/cam/hp/ginger-pdq"},
+      {"name": "Cancer Research UK", "url": "https://www.cancerresearchuk.org/about-cancer/cancer-in-general/treatment/complementary-alternative-therapies/individual-therapies/ginger"}
+    ]
+  },
+  {
+    "claim": "vitamin C prevents all colds",
+    "risk_level": "medium",
+    "explanation": "Taking vitamin C regularly does not prevent the common cold in most people. It may slightly reduce the duration of cold symptoms, but megadoses do not offer extra protection.",
+    "sources": [
+      {"name": "National Institutes of Health (NIH)", "url": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/"},
+      {"name": "Harvard Health Publishing", "url": "https://www.health.harvard.edu/cold-and-flu/can-vitamin-c-prevent-a-cold"},
+      {"name": "Cochrane Review", "url": "https://www.cochrane.org/CD000980/ARI_vitamin-c-for-preventing-and-treating-the-common-cold"}
+    ]
+  },
+  {
+    "claim": "antibiotics kill viruses",
+    "risk_level": "high",
+    "explanation": "Antibiotics only treat bacterial infections and are completely ineffective against viruses like the cold, flu, or COVID-19. Taking them for a viral infection can lead to antibiotic resistance.",
+    "sources": [
+      {"name": "World Health Organization (WHO)", "url": "https://www.who.int/news-room/fact-sheets/detail/antibiotic-resistance"},
+      {"name": "Centers for Disease Control (CDC)", "url": "https://www.cdc.gov/antibiotic-use/do-they-work.html"},
+      {"name": "NHS UK", "url": "https://www.nhs.uk/conditions/antibiotics/"}
+    ]
+  },
+  {
+    "claim": "cracking knuckles causes arthritis",
+    "risk_level": "low",
+    "explanation": "Cracking knuckles does not cause arthritis. The popping sound is simply bubbles bursting in the fluid that lubricates the joints.",
+    "sources": [
+      {"name": "Harvard Medical School", "url": "https://www.health.harvard.edu/pain/does-cracking-knuckles-cause-arthritis"},
+      {"name": "Arthritis Foundation", "url": "https://www.arthritis.org/health-wellness/healthy-living/managing-pain/fatigue-sleep/does-cracking-knuckles-cause-arthritis"}
+    ]
+  },
+  {
+    "claim": "holding your breath for 10 seconds means you don't have COVID",
+    "risk_level": "high",
+    "explanation": "Being able to hold your breath for 10 seconds without coughing is not a valid test for COVID-19 or any lung disease. The only way to confirm COVID-19 is with a laboratory test.",
+    "sources": [
+      {"name": "World Health Organization (WHO)", "url": "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"},
+      {"name": "Johns Hopkins Medicine", "url": "https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/2019-novel-coronavirus-myth-versus-fact"}
+    ]
+  },
+  {
+    "claim": "drinking bleach cures diseases",
+    "risk_level": "high",
+    "explanation": "Drinking bleach or other household disinfectants is extremely dangerous and can cause severe tissue damage, organ failure, or death. It does not cure any diseases.",
+    "sources": [
+      {"name": "Centers for Disease Control (CDC)", "url": "https://www.cdc.gov/niosh/topics/emres/chemagent.html"},
+      {"name": "U.S. Food & Drug Administration (FDA)", "url": "https://www.fda.gov/consumers/consumer-updates/danger-dont-drink-miracle-mineral-solution-or-similar-products"},
+      {"name": "Poison Control", "url": "https://www.poison.org/articles/bleach"}
+    ]
+  },
+  {
+    "claim": "sugar makes children hyperactive",
+    "risk_level": "low",
+    "explanation": "Multiple controlled studies have shown that sugar does not cause hyperactivity in children. The perceived effect is often due to the excitement of the environment where sugary treats are served (e.g., parties).",
+    "sources": [
+      {"name": "American Academy of Pediatrics", "url": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/How-to-Tame-Your-Sweet-Tooth.aspx"},
+      {"name": "Harvard Medical School", "url": "https://www.health.harvard.edu/blog/sugar-and-children-the-evidence-for-a-link-to-hyperactivity-2017062911813"},
+      {"name": "NIH PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov/7474248/"}
+    ]
+  },
+  {
+    "claim": "microwaving food destroys all nutrients",
+    "risk_level": "low",
+    "explanation": "Microwaving food can actually preserve more nutrients than boiling, because it cooks the food quickly and uses very little water. No cooking method destroys all nutrients.",
+    "sources": [
+      {"name": "Harvard Medical School", "url": "https://www.health.harvard.edu/staying-healthy/microwave-cooking-and-nutrition"},
+      {"name": "Academy of Nutrition and Dietetics", "url": "https://www.eatright.org/food/cooking-and-meal-planning/cooking-tips/microwave-cooking"}
+    ]
+  },
+  {
+    "claim": "colloidal silver treats all infections",
+    "risk_level": "high",
+    "explanation": "Colloidal silver is not a safe or effective treatment for any disease. Over time, it can build up in the body and cause a permanent bluish-gray discoloration of the skin, known as argyria.",
+    "sources": [
+      {"name": "National Center for Complementary and Integrative Health (NCCIH)", "url": "https://www.nccih.nih.gov/health/colloidal-silver"},
+      {"name": "U.S. Food & Drug Administration (FDA)", "url": "https://www.fda.gov/consumers/consumer-updates/silver-not-safe-or-effective-many-diseases-and-conditions"},
+      {"name": "Mayo Clinic", "url": "https://www.mayoclinic.org/drugs-supplements/colloidal-silver/art-20351264"}
+    ]
+  },
+  {
+    "claim": "a daily aspirin prevents heart attacks for everyone",
+    "risk_level": "medium",
+    "explanation": "While daily aspirin can prevent heart attacks in some high-risk individuals, it is not recommended for everyone due to the risk of serious bleeding. You should only take it if prescribed by your doctor.",
+    "sources": [
+      {"name": "American Heart Association", "url": "https://www.heart.org/en/health-topics/heart-attack/treatment-of-a-heart-attack/aspirin-and-heart-disease"},
+      {"name": "U.S. Preventive Services Task Force", "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/aspirin-use-to-prevent-cardiovascular-disease-preventive-medication"},
+      {"name": "Harvard Health Publishing", "url": "https://www.health.harvard.edu/heart-health/is-an-aspirin-a-day-still-a-good-idea"}
+    ]
+  },
+  {
+    "claim": "sunscreen causes cancer",
+    "risk_level": "high",
+    "explanation": "Sunscreen helps prevent skin cancer by blocking harmful UV rays. There is no reliable scientific evidence that approved sunscreen ingredients cause cancer.",
+    "sources": [
+      {"name": "American Academy of Dermatology", "url": "https://www.aad.org/public/everyday-care/sun-protection/sunscreen-patients/sunscreen-faqs"},
+      {"name": "Skin Cancer Foundation", "url": "https://www.skincancer.org/skin-cancer-prevention/sun-protection/sunscreen/"},
+      {"name": "U.S. Food & Drug Administration (FDA)", "url": "https://www.fda.gov/drugs/understanding-over-counter-medicines/sunscreen-how-help-protect-your-skin-sun"}
+    ]
+  },
+  {
+    "claim": "going outside with wet hair causes a cold",
+    "risk_level": "low",
+    "explanation": "Colds are caused by viruses, not by being cold or having wet hair. You can only catch a cold if you are exposed to a virus.",
+    "sources": [
+      {"name": "Centers for Disease Control (CDC)", "url": "https://www.cdc.gov/common-cold/about/index.html"},
+      {"name": "Harvard Medical School", "url": "https://www.health.harvard.edu/diseases-and-conditions/can-you-catch-a-cold-from-going-out-in-the-cold"}
+    ]
+  }
+]
