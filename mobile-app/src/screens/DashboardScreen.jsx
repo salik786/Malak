@@ -75,6 +75,7 @@ export default function DashboardScreen() {
   const [history, setHistory]   = useState([])
   const [loading, setLoading]   = useState(true)
   const [activeFilter, setActiveFilter] = useState(null)
+  const [expanded, setExpanded] = useState(null)
 
   const fetchData = () => {
     fetch(`${API_URL}/checks/history`)
@@ -187,18 +188,34 @@ export default function DashboardScreen() {
       ) : filteredClaims.slice(0, 20).map((item, i) => {
         const risk = (item.risk_level || 'unknown').toLowerCase()
         const meta = RISK_META[risk] || RISK_META.unknown
+        const isOpen = expanded === i
         return (
-          <div key={item.id || i} style={{
-            background: '#ffffff', borderRadius: 12, marginBottom: 8, padding: '12px 14px',
-            border: `1px solid ${C.border}`, borderLeft: `3px solid ${meta.color}`,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: meta.color }}>{meta.icon} {meta.label}</span>
-              <span style={{ fontSize: 10, color: '#64748b' }}>{(item.timestamp || '').slice(0, 10)}</span>
+          <div
+            key={item.id || i}
+            onClick={() => setExpanded(isOpen ? null : i)}
+            style={{
+              background: '#ffffff', borderRadius: 12, marginBottom: 8,
+              border: `1px solid ${C.border}`, borderLeft: `3px solid ${meta.color}`,
+              overflow: 'hidden', cursor: 'pointer',
+            }}
+          >
+            <div style={{ padding: '12px 14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: meta.color }}>{meta.icon} {meta.label}</span>
+                <span style={{ fontSize: 10, color: '#64748b' }}>{(item.timestamp || '').slice(0, 10)}</span>
+              </div>
+              <div style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: isOpen ? 999 : 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {item.claim}
+              </div>
             </div>
-            <div style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {item.claim}
-            </div>
+            {isOpen && (
+              <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}`, background: '#f8fafc' }}>
+                {item.explanation && (
+                  <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.6, marginBottom: 8 }}>{item.explanation}</div>
+                )}
+                <div style={{ fontSize: 11, color: '#94a3b8' }}>{new Date(item.timestamp).toLocaleString()}</div>
+              </div>
+            )}
           </div>
         )
       })}
