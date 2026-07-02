@@ -328,9 +328,46 @@ function ResultView({ C, result, sources, claim, onReset }) {
 
         {/* Verdict */}
         {result?.verdict && (
-          <div style={{ background: C.surface, borderRadius: 14, padding: '14px 16px', border: `1px solid ${C.border}`, marginBottom: 12 }}>
+          <div style={{ background: '#ffffff', borderRadius: 14, padding: '14px 16px', border: `1px solid ${C.border}`, marginBottom: 12 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: 'uppercase', marginBottom: 8 }}>Verdict</div>
-            <div style={{ fontSize: 14, color: C.text, lineHeight: 1.6 }}>{result.verdict}</div>
+            <div style={{ fontSize: 14, color: '#0f172a', lineHeight: 1.6 }}>{result.verdict}</div>
+          </div>
+        )}
+
+        {/* Evidence */}
+        {result?.evidence && (
+          <div style={{ background: '#ffffff', borderRadius: 14, overflow: 'hidden', border: `1px solid ${C.border}`, marginBottom: 12 }}>
+            <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}`, fontSize: 11, fontWeight: 700, color: C.accent, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Scientific Evidence
+            </div>
+            {result.evidence.consensus && (
+              <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}`, background: '#f0f9ff' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#0369a1', marginBottom: 4, textTransform: 'uppercase' }}>Scientific Consensus</div>
+                <div style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.5 }}>{result.evidence.consensus}</div>
+              </div>
+            )}
+            {result.evidence.evidence_for?.length > 0 && (
+              <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}` }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', marginBottom: 8, textTransform: 'uppercase' }}>Supporting Evidence</div>
+                {result.evidence.evidence_for.map((e, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+                    <span style={{ color: '#16a34a', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                    <span style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4 }}>{e}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {result.evidence.evidence_against?.length > 0 && (
+              <div style={{ padding: '12px 16px' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#dc2626', marginBottom: 8, textTransform: 'uppercase' }}>Contradicting Evidence</div>
+                {result.evidence.evidence_against.map((e, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+                    <span style={{ color: '#dc2626', fontWeight: 700, flexShrink: 0 }}>✗</span>
+                    <span style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4 }}>{e}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
