@@ -133,13 +133,11 @@ export default function CheckScreen() {
     }
   }
 
-  const s = { display: 'flex', flexDirection: 'column', height: '100%', background: C.bg }
-
   if (phase === 'streaming') return <StreamingView C={C} steps={steps} activeStep={activeStep} claim={claim} />
   if (phase === 'result')    return <ResultView    C={C} result={result} sources={sources} claim={claim} onReset={() => { setPhase('idle'); setClaim('') }} />
 
   return (
-    <div style={{ ...s, overflowY: 'auto', padding: '20px 16px' }}>
+    <div style={{ flex: 1, overflowY: 'auto', background: C.bg, padding: '20px 16px' }}>
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg, ${C.accent}22, ${C.surface})`, borderRadius: 16, padding: '20px 16px', marginBottom: 16, border: `1px solid ${C.border}` }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>🔬</div>
@@ -150,40 +148,37 @@ export default function CheckScreen() {
       {error ? <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 12, padding: '12px 16px', marginBottom: 12, color: '#b91c1c', fontSize: 14 }}>{error}</div> : null}
 
       {/* Input Card */}
-      <div style={{ background: C.surface, borderRadius: 16, border: `1px solid ${C.border}`, overflow: 'hidden', marginBottom: 12 }}>
+      <div style={{ background: C.surface, borderRadius: 16, border: `1px solid ${C.border}`, marginBottom: 12 }}>
         <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}` }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: C.subtext, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Enter Health Claim</span>
         </div>
-        <div style={{ position: 'relative' }}>
-          <textarea
-            value={claim}
-            onChange={e => setClaim(e.target.value)}
-            placeholder="Type or speak any health claim you've seen online..."
-            rows={4}
+        <textarea
+          value={claim}
+          onChange={e => setClaim(e.target.value)}
+          placeholder="Type or speak any health claim you've seen online..."
+          rows={4}
+          style={{
+            width: '100%', padding: '14px 16px',
+            background: 'transparent', border: 'none', outline: 'none',
+            color: C.text, fontSize: 15, lineHeight: 1.6, resize: 'none',
+            boxSizing: 'border-box', display: 'block',
+          }}
+        />
+        <div style={{ padding: '8px 12px', borderTop: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button
+            onClick={isRecording ? stopVoice : startVoice}
             style={{
-              width: '100%', padding: '14px 16px', paddingBottom: 52,
-              background: 'transparent', border: 'none', outline: 'none',
-              color: C.text, fontSize: 15, lineHeight: 1.6, resize: 'none',
-              boxSizing: 'border-box',
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '6px 14px', borderRadius: 20,
+              background: isRecording ? '#ef4444' : C.bg,
+              color: isRecording ? '#fff' : C.subtext,
+              fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              border: `1px solid ${isRecording ? '#ef4444' : C.border}`,
             }}
-          />
-          {/* Toolbar inside textarea */}
-          <div style={{ position: 'absolute', bottom: 8, left: 8, right: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <button
-              onClick={isRecording ? stopVoice : startVoice}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px', borderRadius: 20,
-                background: isRecording ? '#ef4444' : C.pill,
-                color: isRecording ? '#fff' : C.subtext,
-                fontSize: 13, fontWeight: 600,
-                border: `1px solid ${isRecording ? '#ef4444' : C.border}`,
-              }}
-            >
-              {isRecording ? '⏹ Stop' : '🎙 Voice'}
-            </button>
-            <span style={{ fontSize: 12, color: C.muted }}>{claim.length}/500</span>
-          </div>
+          >
+            {isRecording ? '⏹ Stop' : '🎙 Voice'}
+          </button>
+          <span style={{ fontSize: 12, color: C.muted }}>{claim.length}/500</span>
         </div>
       </div>
 
