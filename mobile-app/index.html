@@ -13,8 +13,10 @@
     <title>MALAK – Health Claim Checker</title>
     <style>
       * { box-sizing: border-box; }
-      html, body { margin: 0; padding: 0; height: 100%; background: #f8fafc; }
-      #root { height: 100%; }
+      html, body { margin: 0; padding: 0; height: 100%; background: #f8fafc; overflow: hidden; }
+      #root { height: 100%; overflow: hidden; }
+      ::-webkit-scrollbar { display: none; }
+      * { scrollbar-width: none; -ms-overflow-style: none; }
       @media (prefers-color-scheme: light) {
         html, body { background: #f8fafc; }
       }

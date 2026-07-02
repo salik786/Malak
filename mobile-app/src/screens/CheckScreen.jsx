@@ -74,7 +74,7 @@ export default function CheckScreen() {
     if (!claim.trim()) return
     setPhase('streaming')
     setSteps({})
-    setActive(0)
+    setActive(1)
     setResult(null)
     setSources([])
     setError('')
@@ -229,49 +229,69 @@ export default function CheckScreen() {
 function StreamingView({ C, steps, activeStep, claim }) {
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', background: C.bg }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ fontSize: 28, marginBottom: 8 }}>🔬</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: C.text }}>Analyzing Claim</div>
-        <div style={{ fontSize: 13, color: C.subtext, marginTop: 4, padding: '0 20px' }} numberOfLines={2}>{claim}</div>
+        <div style={{ fontSize: 32, marginBottom: 10 }}>🔬</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>Analyzing Claim</div>
+        <div style={{ fontSize: 13, color: '#475569', marginTop: 6, padding: '0 20px', lineHeight: 1.5 }}>{claim}</div>
       </div>
 
       {STEPS.map((step, i) => {
         const done = activeStep > i + 1
         const active = activeStep === i + 1
+        const pending = activeStep < i + 1
         const data = steps[step.id]
+
         return (
           <div key={step.id} style={{
-            background: C.surface, borderRadius: 14, padding: '14px 16px', marginBottom: 10,
-            border: `1px solid ${active ? C.accent : done ? '#22c55e44' : C.border}`,
-            opacity: activeStep < i + 1 ? 0.4 : 1,
+            background: '#ffffff', borderRadius: 14, padding: '14px 16px', marginBottom: 10,
+            border: `2px solid ${done ? '#22c55e' : active ? C.accent : '#e2e8f0'}`,
+            transition: 'border-color 0.3s ease',
+            animation: 'fadeSlideIn 0.3s ease',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {/* Step indicator */}
               <div style={{
-                width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                background: done ? '#22c55e' : active ? C.accent : C.border,
+                width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+                background: done ? '#22c55e' : active ? C.accent : '#e2e8f0',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14,
-                animation: active ? 'pulse-anim 1.5s infinite' : 'none',
+                fontSize: 15, fontWeight: 700, color: done || active ? '#fff' : '#94a3b8',
+                transition: 'background 0.3s ease',
               }}>
-                {done ? '✓' : <span style={{ color: active ? '#fff' : C.muted }}>{i + 1}</span>}
+                {done ? '✓' : active ? (
+                  <div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                ) : i + 1}
               </div>
+
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{step.label}</div>
-                <div style={{ fontSize: 12, color: C.subtext }}>{step.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: pending ? '#94a3b8' : '#0f172a', transition: 'color 0.3s' }}>{step.label}</div>
+                <div style={{ fontSize: 12, color: pending ? '#cbd5e1' : '#64748b', transition: 'color 0.3s' }}>{step.desc}</div>
               </div>
-              {active && <div style={{ fontSize: 11, color: C.accent, fontWeight: 600, animation: 'pulse-anim 1s infinite' }}>Running…</div>}
-              {done && <div style={{ fontSize: 11, color: '#22c55e', fontWeight: 600 }}>Done</div>}
+
+              <div style={{ fontSize: 11, fontWeight: 700 }}>
+                {done && <span style={{ color: '#22c55e' }}>✓ Done</span>}
+                {active && <span style={{ color: C.accent }}>Running…</span>}
+                {pending && <span style={{ color: '#cbd5e1' }}>Waiting</span>}
+              </div>
             </div>
-            {done && data && step.id === 'step1' && (
-              <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
+
+            {/* Step 1 result preview */}
+            {done && data && step.id === 'step1' && (data.sources || []).length > 0 && (
+              <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
                 {(data.sources || []).slice(0, 3).map((src, j) => (
-                  <div key={j} style={{ fontSize: 12, color: C.subtext, marginBottom: 2 }}>• {src.name}</div>
+                  <div key={j} style={{ fontSize: 12, color: '#475569', marginBottom: 3 }}>📌 {src.name}</div>
                 ))}
               </div>
             )}
-            {done && data && step.id === 'step2' && (
-              <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 12, color: C.subtext }}>{data.consensus?.slice(0, 80)}…</div>
+
+            {/* Step 2 result preview */}
+            {done && data && step.id === 'step2' && data.evidence?.consensus && (
+              <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: 12, color: '#475569', lineHeight: 1.5 }}>{data.evidence.consensus?.slice(0, 100)}…</div>
               </div>
             )}
           </div>
