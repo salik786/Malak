@@ -189,14 +189,14 @@ export default function DashboardScreen() {
         const meta = RISK_META[risk] || RISK_META.unknown
         return (
           <div key={item.id || i} style={{
-            background: C.surface, borderRadius: 12, marginBottom: 8, padding: '12px 14px',
+            background: '#ffffff', borderRadius: 12, marginBottom: 8, padding: '12px 14px',
             border: `1px solid ${C.border}`, borderLeft: `3px solid ${meta.color}`,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: meta.color }}>{meta.icon} {meta.label}</span>
-              <span style={{ fontSize: 10, color: C.muted }}>{(item.timestamp || '').slice(0, 10)}</span>
+              <span style={{ fontSize: 10, color: '#64748b' }}>{(item.timestamp || '').slice(0, 10)}</span>
             </div>
-            <div style={{ fontSize: 13, color: C.text, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            <div style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {item.claim}
             </div>
           </div>

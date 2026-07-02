@@ -55,7 +55,7 @@ export default function HistoryScreen() {
   } : { high: 0, medium: 0, low: 0 }
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: C.bg, height: '100%' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: C.bg, minHeight: 0 }}>
       {/* Summary Bar */}
       <div style={{ background: C.surface, padding: '14px 16px', borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
@@ -122,9 +122,9 @@ export default function HistoryScreen() {
               key={item.id || i}
               onClick={() => setExpanded(isOpen ? null : i)}
               style={{
-                background: C.surface, borderRadius: 14, marginBottom: 10,
+                background: '#ffffff', borderRadius: 14, marginBottom: 10,
                 border: `1px solid ${C.border}`, borderLeft: `4px solid ${meta.color}`,
-                overflow: 'hidden', cursor: 'pointer', animation: 'fadeIn 0.3s ease',
+                overflow: 'hidden', cursor: 'pointer',
               }}
             >
               <div style={{ padding: '12px 14px' }}>
@@ -133,18 +133,18 @@ export default function HistoryScreen() {
                     <span style={{ fontSize: 12 }}>{meta.icon}</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: meta.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{meta.label}</span>
                   </div>
-                  <span style={{ fontSize: 11, color: C.muted }}>{timeAgo(item.timestamp)}</span>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>{timeAgo(item.timestamp)}</span>
                 </div>
-                <div style={{ fontSize: 14, fontWeight: 500, color: C.text, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: isOpen ? 999 : 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <div style={{ fontSize: 14, fontWeight: 500, color: '#0f172a', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: isOpen ? 999 : 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {item.claim}
                 </div>
               </div>
               {isOpen && (
-                <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}`, background: C.bg }}>
+                <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}`, background: '#f8fafc' }}>
                   {item.explanation && (
-                    <div style={{ fontSize: 13, color: C.subtext, lineHeight: 1.6, marginBottom: 8 }}>{item.explanation}</div>
+                    <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.6, marginBottom: 8 }}>{item.explanation}</div>
                   )}
-                  <div style={{ fontSize: 11, color: C.muted }}>{new Date(item.timestamp).toLocaleString()}</div>
+                  <div style={{ fontSize: 11, color: '#94a3b8' }}>{new Date(item.timestamp).toLocaleString()}</div>
                 </div>
               )}
             </div>
