@@ -164,6 +164,7 @@ export default function CheckScreen() {
               width: '100%', padding: '14px 16px', paddingBottom: 52,
               background: 'transparent', border: 'none', outline: 'none',
               color: C.text, fontSize: 15, lineHeight: 1.6, resize: 'none',
+              boxSizing: 'border-box',
             }}
           />
           {/* Toolbar inside textarea */}
