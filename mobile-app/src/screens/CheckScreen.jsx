@@ -25,6 +25,7 @@ export default function CheckScreen() {
   const [sources, setSources]   = useState([])
   const [error, setError]       = useState('')
   const [isRecording, setIsRecording] = useState(false)
+  const [isTranscribing, setIsTranscribing] = useState(false)
   const mediaRef  = useRef(null)
   const chunksRef = useRef([])
 
@@ -37,28 +38,26 @@ export default function CheckScreen() {
       mr.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data) }
       mr.onstop = async () => {
         stream.getTracks().forEach(t => t.stop())
+        setIsTranscribing(true)
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
-        console.log('[Voice] Blob size:', blob.size)
         const fd = new FormData()
         fd.append('file', blob, 'recording.webm')
         try {
           const res = await fetch(`${API_URL}/transcribe`, { method: 'POST', body: fd })
-          console.log('[Voice] Response status:', res.status)
           if (!res.ok) throw new Error(`HTTP ${res.status}`)
           const data = await res.json()
-          console.log('[Voice] Transcript:', data.text)
           if (data.text) setClaim(data.text)
           else setError('No speech detected.')
         } catch (e) {
-          console.error('[Voice] Transcription error:', e)
           setError('Transcription failed: ' + e.message)
+        } finally {
+          setIsTranscribing(false)
         }
       }
       mr.start()
       mediaRef.current = mr
       setIsRecording(true)
     } catch (e) {
-      console.error('[Voice] Mic error:', e)
       setError('Microphone access denied.')
     }
   }
@@ -138,6 +137,10 @@ export default function CheckScreen() {
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', background: C.bg, padding: '20px 16px' }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse-anim { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+      `}</style>
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg, ${C.accent}22, ${C.surface})`, borderRadius: 16, padding: '20px 16px', marginBottom: 16, border: `1px solid ${C.border}` }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>🔬</div>
@@ -152,31 +155,52 @@ export default function CheckScreen() {
         <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}` }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: C.subtext, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Enter Health Claim</span>
         </div>
+        {/* Recording hint banner */}
+        {isRecording && (
+          <div style={{ background: '#fef2f2', padding: '8px 16px', borderBottom: `1px solid #fecaca`, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', animation: 'pulse-anim 1s infinite' }} />
+            <span style={{ fontSize: 13, color: '#dc2626', fontWeight: 500 }}>Recording… Tap Stop when done — your speech will appear here</span>
+          </div>
+        )}
+        {isTranscribing && (
+          <div style={{ background: '#eff6ff', padding: '8px 16px', borderBottom: `1px solid #bfdbfe`, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 14, height: 14, border: '2px solid #93c5fd', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: '#1d4ed8', fontWeight: 500 }}>Transcribing your speech…</span>
+          </div>
+        )}
         <textarea
-          value={claim}
+          value={isTranscribing ? '' : claim}
           onChange={e => setClaim(e.target.value)}
-          placeholder="Type or speak any health claim you've seen online..."
+          placeholder={isTranscribing ? '' : isRecording ? 'Listening… speak your health claim now' : 'Type or speak any health claim you\'ve seen online...'}
+          disabled={isRecording || isTranscribing}
           rows={4}
           style={{
             width: '100%', padding: '14px 16px',
             background: 'transparent', border: 'none', outline: 'none',
             color: C.text, fontSize: 15, lineHeight: 1.6, resize: 'none',
             boxSizing: 'border-box', display: 'block',
+            opacity: isTranscribing ? 0.4 : 1,
           }}
         />
+        {isTranscribing && (
+          <div style={{ position: 'relative', marginTop: -80, paddingBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+            <span style={{ fontSize: 14, color: '#3b82f6', fontWeight: 600 }}>✍️ Transcribing...</span>
+          </div>
+        )}
         <div style={{ padding: '8px 12px', borderTop: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <button
             onClick={isRecording ? stopVoice : startVoice}
+            disabled={isTranscribing}
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
               padding: '6px 14px', borderRadius: 20,
-              background: isRecording ? '#ef4444' : C.bg,
-              color: isRecording ? '#fff' : C.subtext,
-              fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              background: isRecording ? '#ef4444' : isTranscribing ? C.border : C.bg,
+              color: isRecording ? '#fff' : isTranscribing ? C.muted : C.subtext,
+              fontSize: 13, fontWeight: 600, cursor: isTranscribing ? 'not-allowed' : 'pointer',
               border: `1px solid ${isRecording ? '#ef4444' : C.border}`,
             }}
           >
-            {isRecording ? '⏹ Stop' : '🎙 Voice'}
+            {isRecording ? '⏹ Stop Recording' : isTranscribing ? '⏳ Processing…' : '🎙 Voice'}
           </button>
           <span style={{ fontSize: 12, color: C.muted }}>{claim.length}/500</span>
         </div>
