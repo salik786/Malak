@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, inspect, text
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
@@ -15,6 +15,15 @@ _oai_client = _openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY")) if os.env
 
 # Create tables
 models.Base.metadata.create_all(bind=database.engine)
+
+# Lightweight migration: add columns introduced after initial deploy (no Alembic in this project)
+_inspector = inspect(database.engine)
+if "checks" in _inspector.get_table_names():
+    _existing_columns = {c["name"] for c in _inspector.get_columns("checks")}
+    if "explanation" not in _existing_columns:
+        with database.engine.connect() as _conn:
+            _conn.execute(text("ALTER TABLE checks ADD COLUMN explanation TEXT"))
+            _conn.commit()
 
 app = FastAPI(title="MALAK API")
 
@@ -43,6 +52,7 @@ class HistoryItem(BaseModel):
     id: int
     claim: str
     risk_level: str
+    explanation: Optional[str] = None
     source: Optional[str] = None
     timestamp: datetime
 
@@ -84,6 +94,7 @@ async def check_claim_stream(request: ClaimRequest, db: Session = Depends(databa
                     db_check = models.CheckHistory(
                         claim=request.claim,
                         risk_level=verdict.get("risk_level", "unknown"),
+                        explanation=verdict.get("explanation"),
                         source=first_source,
                         language="en"
                     )
@@ -109,6 +120,7 @@ def check_claim(request: ClaimRequest, db: Session = Depends(database.get_db)):
     db_check = models.CheckHistory(
         claim=request.claim,
         risk_level=result.risk_level,
+        explanation=result.explanation,
         source=first_source,
         language="en"
     )
