@@ -63,7 +63,6 @@ Respond ONLY with valid JSON:
         step1_resp = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=600,
-            temperature=0.0,
             system="You only output valid JSON. Always use real, specific URLs that exist.",
             messages=[{"role": "user", "content": step1_prompt}]
         )
@@ -99,7 +98,6 @@ Respond ONLY with valid JSON:
         step2_resp = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=600,
-            temperature=0.0,
             system="You only output valid JSON.",
             messages=[{"role": "user", "content": step2_prompt}]
         )
@@ -136,7 +134,6 @@ risk_level guide:
         step3_resp = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=400,
-            temperature=0.0,
             system="You only output valid JSON.",
             messages=[{"role": "user", "content": step3_prompt}]
         )

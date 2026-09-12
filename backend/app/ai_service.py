@@ -79,7 +79,6 @@ Always include at least 1 source. Use real URLs from WHO, CDC, NIH, Mayo Clinic,
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=600,
-        temperature=0.0,
         system="You are a helpful assistant that only outputs valid JSON. Always include real, working URLs in sources.",
         messages=[
             {"role": "user", "content": prompt}
