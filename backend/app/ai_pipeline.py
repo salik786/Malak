@@ -1,7 +1,24 @@
 import json
+import traceback
 import anthropic
 from typing import AsyncGenerator
 from .ai_service import client
+
+
+def _describe_error(e: Exception) -> str:
+    """Turn an Anthropic SDK exception into a message that actually says what's wrong."""
+    if isinstance(e, anthropic.AuthenticationError):
+        return "Anthropic rejected the API key (401 authentication error). The key is invalid, revoked, or was rotated."
+    if isinstance(e, anthropic.PermissionDeniedError):
+        return "Anthropic denied access (403). The API key doesn't have permission for this model/action."
+    if isinstance(e, anthropic.RateLimitError):
+        return "Anthropic rate limit hit (429). Too many requests, or the account is out of quota/credits."
+    if isinstance(e, anthropic.APIStatusError):
+        return f"Anthropic API error (HTTP {e.status_code}): {getattr(e, 'message', str(e))}"
+    if isinstance(e, anthropic.APIConnectionError):
+        return "Could not reach the Anthropic API (network/connection error)."
+    return f"{type(e).__name__}: {e}"
+
 
 async def run_pipeline(claim: str) -> AsyncGenerator[str, None]:
     """
@@ -12,6 +29,7 @@ async def run_pipeline(claim: str) -> AsyncGenerator[str, None]:
       done  -> signal
     On failure, streams an `error` event instead of raising, so the
     client connection doesn't just die mid-stream with no feedback.
+    The full traceback is also printed server-side for Railway logs.
     """
 
     def emit(event: str, data: dict) -> str:
@@ -130,7 +148,9 @@ risk_level guide:
         yield emit("done", {"sources": sources, "evidence": evidence, "verdict": verdict})
 
     except Exception as e:
-        yield emit("error", {"message": f"Claim check failed: {e}"})
+        print(f"[run_pipeline] claim check failed for claim={claim!r}: {e}")
+        traceback.print_exc()
+        yield emit("error", {"message": f"Claim check failed: {_describe_error(e)}"})
 
 
 def _parse_json(text: str) -> dict:
