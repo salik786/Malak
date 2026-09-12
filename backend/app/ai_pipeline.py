@@ -10,15 +10,22 @@ async def run_pipeline(claim: str) -> AsyncGenerator[str, None]:
       step2 -> evidence
       step3 -> verdict
       done  -> signal
+    On failure, streams an `error` event instead of raising, so the
+    client connection doesn't just die mid-stream with no feedback.
     """
 
     def emit(event: str, data: dict) -> str:
         return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
-    # ── Step 1: Source Discovery ───────────────────────────────────────────────
-    yield emit("status", {"step": 1, "message": "Finding authoritative sources…"})
+    if not client:
+        yield emit("error", {"message": "ANTHROPIC_API_KEY is not configured on the server."})
+        return
 
-    step1_prompt = f"""You are a health research assistant. A user submitted this health claim:
+    try:
+        # ── Step 1: Source Discovery ───────────────────────────────────────────────
+        yield emit("status", {"step": 1, "message": "Finding authoritative sources…"})
+
+        step1_prompt = f"""You are a health research assistant. A user submitted this health claim:
 "{claim}"
 
 Find 3-5 real, authoritative sources that are directly relevant to this specific claim.
@@ -35,21 +42,21 @@ Respond ONLY with valid JSON:
   ]
 }}"""
 
-    step1_resp = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=600,
-        temperature=0.0,
-        system="You only output valid JSON. Always use real, specific URLs that exist.",
-        messages=[{"role": "user", "content": step1_prompt}]
-    )
-    sources = _parse_json(step1_resp.content[0].text).get("sources", [])
-    yield emit("step1", {"sources": sources})
+        step1_resp = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=600,
+            temperature=0.0,
+            system="You only output valid JSON. Always use real, specific URLs that exist.",
+            messages=[{"role": "user", "content": step1_prompt}]
+        )
+        sources = _parse_json(step1_resp.content[0].text).get("sources", [])
+        yield emit("step1", {"sources": sources})
 
-    # ── Step 2: Evidence Research ──────────────────────────────────────────────
-    yield emit("status", {"step": 2, "message": "Gathering evidence from sources…"})
+        # ── Step 2: Evidence Research ──────────────────────────────────────────────
+        yield emit("status", {"step": 2, "message": "Gathering evidence from sources…"})
 
-    sources_text = "\n".join([f"- {s['name']}: {s['url']}" for s in sources])
-    step2_prompt = f"""You are a medical evidence researcher. Analyze this health claim using the identified sources.
+        sources_text = "\n".join([f"- {s['name']}: {s['url']}" for s in sources])
+        step2_prompt = f"""You are a medical evidence researcher. Analyze this health claim using the identified sources.
 
 Claim: "{claim}"
 
@@ -71,20 +78,20 @@ Respond ONLY with valid JSON:
   "consensus": "A single sentence summarizing the current scientific consensus on this claim"
 }}"""
 
-    step2_resp = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=600,
-        temperature=0.0,
-        system="You only output valid JSON.",
-        messages=[{"role": "user", "content": step2_prompt}]
-    )
-    evidence = _parse_json(step2_resp.content[0].text)
-    yield emit("step2", {"evidence": evidence})
+        step2_resp = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=600,
+            temperature=0.0,
+            system="You only output valid JSON.",
+            messages=[{"role": "user", "content": step2_prompt}]
+        )
+        evidence = _parse_json(step2_resp.content[0].text)
+        yield emit("step2", {"evidence": evidence})
 
-    # ── Step 3: Verdict & Rating ───────────────────────────────────────────────
-    yield emit("status", {"step": 3, "message": "Generating final verdict…"})
+        # ── Step 3: Verdict & Rating ───────────────────────────────────────────────
+        yield emit("status", {"step": 3, "message": "Generating final verdict…"})
 
-    step3_prompt = f"""You are a senior health fact-checker making a final verdict.
+        step3_prompt = f"""You are a senior health fact-checker making a final verdict.
 
 Claim: "{claim}"
 
@@ -108,19 +115,22 @@ risk_level guide:
 - medium: partially true, oversimplified, or lacks evidence
 - low: well-supported by science, generally safe advice"""
 
-    step3_resp = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=400,
-        temperature=0.0,
-        system="You only output valid JSON.",
-        messages=[{"role": "user", "content": step3_prompt}]
-    )
-    verdict = _parse_json(step3_resp.content[0].text)
-    if verdict.get("risk_level") not in ["high", "medium", "low"]:
-        verdict["risk_level"] = "unknown"
-    yield emit("step3", {"verdict": verdict})
+        step3_resp = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            temperature=0.0,
+            system="You only output valid JSON.",
+            messages=[{"role": "user", "content": step3_prompt}]
+        )
+        verdict = _parse_json(step3_resp.content[0].text)
+        if verdict.get("risk_level") not in ["high", "medium", "low"]:
+            verdict["risk_level"] = "unknown"
+        yield emit("step3", {"verdict": verdict})
 
-    yield emit("done", {"sources": sources, "evidence": evidence, "verdict": verdict})
+        yield emit("done", {"sources": sources, "evidence": evidence, "verdict": verdict})
+
+    except Exception as e:
+        yield emit("error", {"message": f"Claim check failed: {e}"})
 
 
 def _parse_json(text: str) -> dict:
