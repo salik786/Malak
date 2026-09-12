@@ -84,22 +84,28 @@ async def check_claim_stream(request: ClaimRequest, db: Session = Depends(databa
             yield chunk
             # parse done event to save to DB
             if chunk.startswith("event: done"):
-                import json as _json
-                data_line = [l for l in chunk.split("\n") if l.startswith("data:")]
-                if data_line:
-                    payload = _json.loads(data_line[0][5:])
-                    sources = payload.get("sources", [])
-                    verdict = payload.get("verdict", {})
-                    first_source = sources[0]["name"] if sources else None
-                    db_check = models.CheckHistory(
-                        claim=request.claim,
-                        risk_level=verdict.get("risk_level", "unknown"),
-                        explanation=verdict.get("explanation"),
-                        source=first_source,
-                        language="en"
-                    )
-                    db.add(db_check)
-                    db.commit()
+                try:
+                    import json as _json
+                    data_line = [l for l in chunk.split("\n") if l.startswith("data:")]
+                    if data_line:
+                        payload = _json.loads(data_line[0][5:])
+                        sources = payload.get("sources", [])
+                        verdict = payload.get("verdict", {})
+                        first_source = sources[0]["name"] if sources else None
+                        db_check = models.CheckHistory(
+                            claim=request.claim,
+                            risk_level=verdict.get("risk_level", "unknown"),
+                            explanation=verdict.get("explanation"),
+                            source=first_source,
+                            language="en"
+                        )
+                        db.add(db_check)
+                        db.commit()
+                except Exception as e:
+                    # The answer was already streamed to the client; a history-save
+                    # failure here must not take down the response.
+                    print(f"Failed to save check history: {e}")
+                    db.rollback()
 
     return StreamingResponse(
         event_stream(),
